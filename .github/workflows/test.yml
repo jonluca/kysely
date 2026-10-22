@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [22.x, 24.x, "26.12.1"]
         deno-version: [1.19.x]
 
     steps:
@@ -32,13 +32,16 @@ jobs:
         run: npm ci
 
       - name: Run docker compose
-        run: docker-compose up -d
+        run: docker compose up -d
 
       - name: Run node tests
         run: npm test
 
       - name: Run node tests with transformer
         run: TEST_TRANSFORMER=1 npm test
+
+      - name: Install browser for smoke tests
+        run: npx playwright install --with-deps chromium
 
       - name: Run browser tests
         run: npm run test:browser
